@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Camera, Mic, MoreVertical, Users } from "lucide-react";
 import Image from "next/image";
+import { LocalUser } from "agora-rtc-react";
+import { useTrackStore } from "@/store/useTrackStore";
 
 interface VideoPreviewProps {
   isVideoOff: boolean;
@@ -17,19 +19,36 @@ export function VideoPreview({
   onToggleMute,
   onOpenEffects,
 }: VideoPreviewProps) {
+  const {
+    localCameraTrack,
+    localMicrophoneTrack,
+    isVideoEnabled,
+    isAudioEnabled,
+  } = useTrackStore();
+  console.log(localCameraTrack, localMicrophoneTrack);
+  const handleToggleVideo = () => {
+    localCameraTrack?.setEnabled(!isVideoEnabled);
+    useTrackStore.getState().toggleVideo();
+    onToggleVideo();
+  };
+
+  const handleToggleMute = () => {
+    localMicrophoneTrack?.setEnabled(!isAudioEnabled);
+    useTrackStore.getState().toggleAudio();
+    onToggleMute();
+  };
+
   return (
     <div className="relative aspect-video bg-muted rounded-lg overflow-hidden">
-      {isVideoOff ? (
+      <LocalUser
+        videoTrack={localCameraTrack}
+        audioTrack={localMicrophoneTrack}
+        cameraOn={!isVideoOff}
+      />
+      {isVideoOff && (
         <div className="absolute inset-0 flex items-center justify-center">
           <Users className="w-20 h-20 text-muted-foreground" />
         </div>
-      ) : (
-        <Image
-          src="/placeholder.svg"
-          alt="Video preview"
-          fill
-          className="object-cover"
-        />
       )}
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/50 to-transparent">
         <div className="flex items-center justify-center gap-4">
@@ -37,7 +56,7 @@ export function VideoPreview({
             variant="ghost"
             size="icon"
             className="rounded-full bg-white/10 hover:bg-white/20 text-white"
-            onClick={onToggleMute}
+            onClick={handleToggleMute}
           >
             <Mic className={isMuted ? "text-red-500" : ""} />
           </Button>
@@ -45,7 +64,7 @@ export function VideoPreview({
             variant="ghost"
             size="icon"
             className="rounded-full bg-white/10 hover:bg-white/20 text-white"
-            onClick={onToggleVideo}
+            onClick={handleToggleVideo}
           >
             <Camera className={isVideoOff ? "text-red-500" : ""} />
           </Button>

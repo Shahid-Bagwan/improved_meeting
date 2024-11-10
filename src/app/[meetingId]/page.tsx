@@ -1,12 +1,10 @@
-import PreMeeting from "@/components/MeetingModule/PreMeeting/PreMeeting";
+import dynamic from "next/dynamic";
 import React from "react";
-
-const Page = () => {
-  return (
-    <>
-      <PreMeeting />
-    </>
-  );
+const MainPage = dynamic(() => import("@/components/MeetingModule/MainPage"), {
+  ssr: false,
+});
+const page = () => {
+  return <MainPage />;
 };
 
-export default Page;
+export default page;

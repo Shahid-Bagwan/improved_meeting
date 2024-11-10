@@ -1,17 +1,26 @@
 "use client";
 import React from "react";
-import AgoraRTC from "agora-rtc-sdk-ng";
+import AgoraRTC, { AgoraRTCProvider } from "agora-rtc-react";
 
 export default function AgoraClientProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+  let client = null;
+  if (typeof window !== "undefined") {
+    client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+
+    console.log("client", client);
+  }
 
   if (!client) {
     return null; // Or render a loading state if desired
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <AgoraRTCProvider client={client}>{children}</AgoraRTCProvider>
+    </>
+  );
 }
