@@ -1,6 +1,10 @@
 "use client";
-import AgoraRTC, { AgoraRTCProvider } from "agora-rtc-react";
-const client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+import React from "react";
+import dynamic from "next/dynamic";
+const AgoraClientProvider = dynamic(
+  () => import("@/components/MeetingModule/PreMeeting/AgoraClientProvider"),
+  { ssr: false }
+);
 const Layout = ({
   children,
 }: Readonly<{
@@ -8,7 +12,7 @@ const Layout = ({
 }>) => {
   return (
     <div className="flex flex-col min-h-screen">
-      <AgoraRTCProvider client={client}>{children}</AgoraRTCProvider>
+      <AgoraClientProvider>{children}</AgoraClientProvider>
     </div>
   );
 };
