@@ -3,8 +3,16 @@ import React from "react";
 const MainPage = dynamic(() => import("@/components/MeetingModule/MainPage"), {
   ssr: false,
 });
-const page = () => {
-  return <MainPage />;
+const AgoraClientProvider = dynamic(
+  () => import("@/components/MeetingModule/PreMeeting/AgoraClientProvider"),
+  { ssr: false }
+);
+const Page = () => {
+  return (
+    <AgoraClientProvider>
+      <MainPage />
+    </AgoraClientProvider>
+  );
 };
 
-export default page;
+export default Page;
