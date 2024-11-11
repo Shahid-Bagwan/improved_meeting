@@ -7,6 +7,11 @@ interface TrackStore {
   isVideoEnabled: boolean;
   isAudioEnabled: boolean;
   joined: boolean;
+  selectedDeviceIds: {
+    microphoneId: string;
+    speakerId: string;
+    cameraId: string;
+  };
   setTracks: (
     video?: ICameraVideoTrack | null,
     audio?: IMicrophoneAudioTrack | null
@@ -14,6 +19,10 @@ interface TrackStore {
   toggleVideo: () => void;
   toggleAudio: () => void;
   setJoined: (joined: boolean) => void;
+  setSelectedDeviceIds: (
+    deviceType: "microphoneId" | "speakerId" | "cameraId",
+    deviceId: string
+  ) => void;
 }
 
 export const useTrackStore = create<TrackStore>((set) => ({
@@ -22,6 +31,11 @@ export const useTrackStore = create<TrackStore>((set) => ({
   isVideoEnabled: true,
   isAudioEnabled: true,
   joined: false,
+  selectedDeviceIds: {
+    microphoneId: "default",
+    speakerId: "default",
+    cameraId: "default",
+  },
   setTracks: (video, audio) =>
     set((state) => ({
       localCameraTrack: video ?? state.localCameraTrack,
@@ -32,4 +46,11 @@ export const useTrackStore = create<TrackStore>((set) => ({
     set((state) => ({ isVideoEnabled: !state.isVideoEnabled })),
   toggleAudio: () =>
     set((state) => ({ isAudioEnabled: !state.isAudioEnabled })),
+  setSelectedDeviceIds: (deviceType, deviceId) =>
+    set((state) => ({
+      selectedDeviceIds: {
+        ...state.selectedDeviceIds,
+        [deviceType]: deviceId,
+      },
+    })),
 }));

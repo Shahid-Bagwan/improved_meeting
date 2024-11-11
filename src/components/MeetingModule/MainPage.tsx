@@ -13,6 +13,7 @@ import React from "react";
 const MainPage = () => {
   const { joined } = useTrackStore();
   const setTracks = useTrackStore((state) => state.setTracks);
+  const selectedDeviceIds = useTrackStore((state) => state.selectedDeviceIds);
   const [tracks, setLocalTracks] = useState<{
     camera: ICameraVideoTrack | null;
     microphone: IMicrophoneAudioTrack | null;
@@ -20,12 +21,17 @@ const MainPage = () => {
 
   useEffect(() => {
     const initializeTracks = () => {
-      // Initialize camera
+      // Initialize camera with selected device
       AgoraRTC.createCameraVideoTrack({
         encoderConfig: "1080p",
+        ...(selectedDeviceIds.cameraId !== "default" && {
+          cameraId: selectedDeviceIds.cameraId,
+        }),
       }).then((cameraTrack) => {
-        // Initialize microphone
-        AgoraRTC.createMicrophoneAudioTrack().then((microphoneTrack) => {
+        // Initialize microphone with selected device
+        AgoraRTC.createMicrophoneAudioTrack({
+          microphoneId: selectedDeviceIds.microphoneId,
+        }).then((microphoneTrack) => {
           setLocalTracks({ camera: cameraTrack, microphone: microphoneTrack });
           setTracks(cameraTrack, microphoneTrack);
         });
@@ -43,7 +49,7 @@ const MainPage = () => {
       tracks.camera?.close();
       tracks.microphone?.close();
     };
-  }, []);
+  }, [selectedDeviceIds]);
 
   // usePublish([tracks.microphone, tracks.camera]);
   // useJoin(
