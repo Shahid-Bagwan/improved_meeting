@@ -52,7 +52,7 @@ export function SettingsControls() {
 
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="grid gap-2">
+      <div className="grid gap-2 overflow-hidden">
         <Select
           defaultValue="default"
           onValueChange={(value) => handleDeviceChange("microphoneId", value)}
@@ -64,12 +64,8 @@ export function SettingsControls() {
             </div>
           </SelectTrigger>
           <SelectContent>
-            {devices.microphones.map((device) => (
-              <SelectItem
-                key={device.deviceId}
-                value={device.deviceId}
-                className="truncate break-words"
-              >
+            {devices?.microphones?.map((device) => (
+              <SelectItem key={device.deviceId} value={device.deviceId}>
                 {device.label || "Unnamed Microphone"}
               </SelectItem>
             ))}
@@ -77,7 +73,7 @@ export function SettingsControls() {
         </Select>
       </div>
 
-      <div className="grid gap-2">
+      <div className="grid gap-2 overflow-hidden">
         <Select
           defaultValue="default"
           onValueChange={(value) => handleDeviceChange("speakerId", value)}
@@ -89,7 +85,7 @@ export function SettingsControls() {
             </div>
           </SelectTrigger>
           <SelectContent>
-            {devices.speakers.map((device) => (
+            {devices?.speakers?.map((device) => (
               <SelectItem
                 key={device.deviceId}
                 value={device.deviceId}
@@ -102,7 +98,7 @@ export function SettingsControls() {
         </Select>
       </div>
 
-      <div className="grid gap-2">
+      <div className="grid gap-2 overflow-hidden">
         <Select
           defaultValue="default"
           onValueChange={(value) => handleDeviceChange("cameraId", value)}
@@ -114,7 +110,7 @@ export function SettingsControls() {
             </div>
           </SelectTrigger>
           <SelectContent>
-            {devices.cameras.map((device) => (
+            {devices?.cameras?.map((device) => (
               <SelectItem
                 key={device.deviceId}
                 value={device.deviceId}
