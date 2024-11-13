@@ -1,22 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { useTrackStore } from "@/store/useTrackStore";
 import { Header } from "./Header";
 import { VideoPreview } from "./VideoPreview";
 import { SettingsControls } from "./SettingsControls";
 import { EffectsDialog } from "./EffectsDialog";
 
-const JoinButton = () => (
-  <button
-    className="w-full md:w-auto px-8 py-3 text-lg font-semibold text-white bg-primary hover:bg-primary/90 rounded-full transition-colors"
-    onClick={() => console.log("Join meeting")}
-  >
-    Join now
-  </button>
-);
-
 export default function PreMeeting() {
   const [isEffectsOpen, setIsEffectsOpen] = useState(false);
+  const setJoined = useTrackStore((state) => state.setJoined);
 
   return (
     <div className="min-h-screen bg-background">
@@ -28,7 +21,12 @@ export default function PreMeeting() {
             <SettingsControls />
           </div>
           <div className="md:flex md:items-start md:pt-4">
-            <JoinButton />
+            <button
+              className="w-full md:w-auto px-8 py-3 text-lg font-semibold text-white bg-primary hover:bg-primary/90 rounded-full transition-colors"
+              onClick={() => setJoined(true)}
+            >
+              Join now
+            </button>
           </div>
         </div>
       </main>

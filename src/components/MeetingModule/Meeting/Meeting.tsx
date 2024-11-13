@@ -16,16 +16,16 @@ const Meeting = () => {
     // Additional layout change logic will be implemented here
   };
 
-  usePublish([tracks.microphone, tracks.camera]);
-  useJoin(
-    {
-      appid: "bb1b240334ea4a29b6a6b535ab3c24d6",
-      channel: "main",
-      token:
-        "007eJxTYLC9sUZIf2PytPppHzXN1IOv5+369aFOu5BX/ERa6u7zZ1cpMCQlGSYZmRgYG5ukJpokGlkmmSWaJZkamyYmGScbmaSYsfwxSG8IZGTQVPjAwsgAgSA+C0NuYmYeAwMAZ1AfgA==",
-    },
-    joined
-  );
+  // usePublish([tracks.microphone, tracks.camera]);
+  // useJoin(
+  //   {
+  //     appid: "bb1b240334ea4a29b6a6b535ab3c24d6",
+  //     channel: "main",
+  //     token:
+  //       "007eJxTYLC9sUZIf2PytPppHzXN1IOv5+369aFOu5BX/ERa6u7zZ1cpMCQlGSYZmRgYG5ukJpokGlkmmSWaJZkamyYmGScbmaSYsfwxSG8IZGTQVPjAwsgAgSA+C0NuYmYeAwMAZ1AfgA==",
+  //   },
+  //   joined
+  // );
   return (
     <main className="min-h-screen bg-black">
       <MeetHeader />

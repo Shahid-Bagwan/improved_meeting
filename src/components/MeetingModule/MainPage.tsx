@@ -52,12 +52,7 @@ const MainPage = () => {
     };
   }, [selectedDeviceIds]);
 
-  return (
-    <>
-      <PreMeeting />
-      {/* <Meeting /> */}
-    </>
-  );
+  return <>{!joined ? <PreMeeting /> : <Meeting />}</>;
 };
 
 export default MainPage;
