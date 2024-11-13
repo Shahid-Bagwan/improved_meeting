@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useTrackStore } from "@/store/useTrackStore";
 import PreMeeting from "@/components/MeetingModule/PreMeeting/PreMeeting";
 import React from "react";
+import Meeting from "./Meeting/Meeting";
 
 const MainPage = () => {
   const { joined } = useTrackStore();
@@ -51,20 +52,10 @@ const MainPage = () => {
     };
   }, [selectedDeviceIds]);
 
-  // usePublish([tracks.microphone, tracks.camera]);
-  // useJoin(
-  //   {
-  //     appid: "bb1b240334ea4a29b6a6b535ab3c24d6",
-  //     channel: "main",
-  //     token:
-  //       "007eJxTYLC9sUZIf2PytPppHzXN1IOv5+369aFOu5BX/ERa6u7zZ1cpMCQlGSYZmRgYG5ukJpokGlkmmSWaJZkamyYmGScbmaSYsfwxSG8IZGTQVPjAwsgAgSA+C0NuYmYeAwMAZ1AfgA==",
-  //   },
-  //   joined
-  // );
-
   return (
     <>
-      <PreMeeting />
+      {/* <PreMeeting /> */}
+      <Meeting />
     </>
   );
 };
