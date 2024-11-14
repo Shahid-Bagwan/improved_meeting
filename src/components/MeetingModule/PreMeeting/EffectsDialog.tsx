@@ -1,6 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/shadcnComponents/button";
+import { Dialog, DialogContent } from "@/components/shadcnComponents/dialog";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/shadcnComponents/tabs";
 import { X } from "lucide-react";
 
 interface EffectsDialogProps {

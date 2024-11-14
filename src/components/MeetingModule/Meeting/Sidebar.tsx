@@ -1,8 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/shadcnComponents/button";
+import { ScrollArea } from "@/components/shadcnComponents/scroll-area";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/shadcnComponents/tabs";
 import { Users, MessageSquare, X } from "lucide-react";
 
 export function Sidebar({

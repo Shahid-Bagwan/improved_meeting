@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { AspectRatio } from "@/components/shadcnComponents/aspect-ratio";
 import { cn } from "@/lib/utils";
 import { Mic, MicOff, Pin } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcnComponents/button";
 import {
   ICameraVideoTrack,
   IMicrophoneAudioTrack,

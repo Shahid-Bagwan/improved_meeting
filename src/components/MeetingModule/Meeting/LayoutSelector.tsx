@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/shadcnComponents/button";
+import { ScrollArea } from "@/components/shadcnComponents/scroll-area";
 import { LayoutGrid, Maximize, X } from "lucide-react";
 
 interface LayoutOption {

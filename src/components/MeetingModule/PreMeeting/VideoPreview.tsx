@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcnComponents/button";
 import { Camera, Mic, MoreVertical, Users } from "lucide-react";
 import { LocalUser } from "agora-rtc-react";
 import { useTrackStore } from "@/store/useTrackStore";

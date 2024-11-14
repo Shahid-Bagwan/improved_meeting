@@ -22,7 +22,7 @@ export default function PreMeeting() {
           </div>
           <div className="md:flex md:items-start md:pt-4">
             <button
-              className="w-full md:w-auto px-8 py-3 text-lg font-semibold text-white bg-primary hover:bg-primary/90 rounded-full transition-colors"
+              className="w-full md:w-auto px-8 py-3 text-lg font-semibold text-white bg-blue-600 hover:bg-blue-900 rounded-full transition-colors"
               onClick={() => setJoined(true)}
             >
               Join now
