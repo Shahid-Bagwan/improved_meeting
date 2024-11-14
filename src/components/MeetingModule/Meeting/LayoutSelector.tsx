@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { LayoutGrid, Maximize, Users, X } from "lucide-react";
+import { LayoutGrid, Maximize, X } from "lucide-react";
 
 interface LayoutOption {
   id: string;
@@ -20,11 +20,6 @@ const layouts: LayoutOption[] = [
     id: "grid",
     name: "Grid Layout",
     icon: <LayoutGrid className="h-5 w-5" />,
-  },
-  {
-    id: "spotlight",
-    name: "Spotlight with Floating Thumbnails",
-    icon: <Users className="h-5 w-5" />,
   },
 ];
 

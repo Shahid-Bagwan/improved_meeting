@@ -5,17 +5,24 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 import { Mic, MicOff, Pin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { LocalUser, useRemoteUsers } from "agora-rtc-react";
+import {
+  ICameraVideoTrack,
+  IMicrophoneAudioTrack,
+  IRemoteAudioTrack,
+  IRemoteVideoTrack,
+  LocalUser,
+  useRemoteUsers,
+} from "agora-rtc-react";
 import { useTrackStore } from "@/store/useTrackStore";
-import { LocalVideoTrack, RemoteUser } from "agora-rtc-react";
+import { RemoteUser } from "agora-rtc-react";
 
 interface Participant {
   id: string | number;
   name: string;
   isMuted: boolean;
   isPinned: boolean;
-  videoTrack: any;
-  audioTrack: any;
+  videoTrack: ICameraVideoTrack | IRemoteVideoTrack | null | undefined;
+  audioTrack: IMicrophoneAudioTrack | IRemoteAudioTrack | null | undefined;
 }
 
 interface ParticipantGridProps {
@@ -87,7 +94,7 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
           className={cn(
             "grid gap-4 h-full",
             participants.length <= 2
-              ? "grid-cols-1"
+              ? "grid-cols-2"
               : participants.length <= 4
               ? "grid-cols-2"
               : "grid-cols-3"
@@ -100,8 +107,10 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
                   <div className="absolute inset-0  flex items-center justify-center">
                     {participant.id === "local" ? (
                       <LocalUser
-                        videoTrack={participant.videoTrack}
-                        audioTrack={participant.audioTrack}
+                        videoTrack={participant.videoTrack as ICameraVideoTrack}
+                        audioTrack={
+                          participant.audioTrack as IMicrophoneAudioTrack
+                        }
                         cameraOn={!isVideoEnabled}
                         micOn={!isAudioEnabled}
                         playAudio={false}
@@ -110,7 +119,8 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
                     ) : (
                       <RemoteUser
                         user={remoteusers.find((u) => u.uid === participant.id)}
-                        playVideo
+                        playVideo={!!participant.videoTrack}
+                        playAudio={!!participant.audioTrack}
                         style={{ width: "100%", height: "100%" }}
                         cover={`https://ui-avatars.com/api/?name=${participant.id}`}
                       />
@@ -166,8 +176,8 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
                 <div className="absolute inset-0 flex items-center justify-center">
                   {pinned?.id === "local" ? (
                     <LocalUser
-                      videoTrack={pinned?.videoTrack}
-                      audioTrack={pinned?.audioTrack}
+                      videoTrack={pinned?.videoTrack as ICameraVideoTrack}
+                      audioTrack={pinned?.audioTrack as IMicrophoneAudioTrack}
                       cameraOn={!isVideoEnabled}
                       micOn={!isAudioEnabled}
                       playAudio={false}
@@ -176,7 +186,8 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
                   ) : (
                     <RemoteUser
                       user={remoteusers.find((u) => u.uid === pinned?.id)}
-                      playVideo
+                      playVideo={!!pinned?.videoTrack}
+                      playAudio={!!pinned?.audioTrack}
                       style={{ width: "100%", height: "100%" }}
                       cover={`https://ui-avatars.com/api/?name=${pinned?.id}`}
                     />
@@ -221,8 +232,10 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
                   <div className="absolute inset-0 flex items-center justify-center">
                     {participant.id === "local" ? (
                       <LocalUser
-                        videoTrack={participant.videoTrack}
-                        audioTrack={participant.audioTrack}
+                        videoTrack={participant.videoTrack as ICameraVideoTrack}
+                        audioTrack={
+                          participant.audioTrack as IMicrophoneAudioTrack
+                        }
                         cameraOn={!isVideoEnabled}
                         micOn={!isAudioEnabled}
                         playAudio={false}
@@ -231,7 +244,8 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
                     ) : (
                       <RemoteUser
                         user={remoteusers.find((u) => u.uid === participant.id)}
-                        playVideo
+                        playVideo={!!participant.videoTrack}
+                        playAudio={!!participant.audioTrack}
                         style={{ width: "100%", height: "100%" }}
                         cover={`https://ui-avatars.com/api/?name=${participant.id}`}
                       />
