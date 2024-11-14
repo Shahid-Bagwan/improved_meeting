@@ -5,13 +5,9 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 import { Mic, MicOff, Pin, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const MOCK_PARTICIPANTS = Array.from({ length: 8 }, (_, i) => ({
-  id: i + 1,
-  name: i === 0 ? "You" : `Participant ${i + 1}`,
-  isMuted: Math.random() > 0.5,
-  isPinned: false,
-}));
+import { useRemoteUsers } from "agora-rtc-react";
+import { useTrackStore } from "@/store/useTrackStore"; // Import useTrackStore
+import { LocalVideoTrack, RemoteUser } from "agora-rtc-react"; // Import components
 
 interface ParticipantGridProps {
   layout?: string;
@@ -20,18 +16,37 @@ interface ParticipantGridProps {
 export function ParticipantGrid({ layout = "grid" }: ParticipantGridProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [pinnedParticipant, setPinnedParticipant] = useState<number | null>(
-    null
-  );
-  const [participants, setParticipants] = useState(MOCK_PARTICIPANTS);
+  const [pinnedParticipant, setPinnedParticipant] = useState<
+    string | number | null
+  >(null);
 
-  const handlePin = (participantId: number) => {
-    setParticipants((prev) =>
-      prev.map((p) => ({
-        ...p,
-        isPinned: p.id === participantId ? !p.isPinned : false,
-      }))
-    );
+  // Get local tracks
+  const { localCameraTrack, localMicrophoneTrack, joined } = useTrackStore();
+
+  // Get remote users
+  const remoteusers = useRemoteUsers();
+
+  // Create participants array
+  const participants = [
+    {
+      id: "local",
+      name: "You",
+      isMuted: !localMicrophoneTrack,
+      isPinned: false,
+      videoTrack: localCameraTrack,
+      audioTrack: localMicrophoneTrack,
+    },
+    ...remoteusers.map((user) => ({
+      id: user.uid,
+      name: `User ${user.uid}`,
+      isMuted: !user.audioTrack,
+      isPinned: false,
+      videoTrack: user.videoTrack,
+      audioTrack: user.audioTrack,
+    })),
+  ];
+
+  const handlePin = (participantId: string | number) => {
     setPinnedParticipant((prev) =>
       prev === participantId ? null : participantId
     );
@@ -57,11 +72,23 @@ export function ParticipantGrid({ layout = "grid" }: ParticipantGridProps) {
             <div key={participant.id} className="relative">
               <div className="relative rounded-lg overflow-hidden bg-neutral-800 h-full">
                 <AspectRatio ratio={16 / 9}>
-                  <div className="absolute inset-0 bg-neutral-900 flex items-center justify-center">
-                    <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center">
-                      <span className="text-2xl text-white">
-                        {participant.name[0]}
-                      </span>
+                  <div className="absolute inset-0  flex items-center justify-center">
+                    <div className="w-20 h-20 rounded-full  flex items-center justify-center">
+                      {participant.id === "local" ? (
+                        <LocalVideoTrack
+                          track={participant.videoTrack}
+                          play
+                          style={{ width: "100%", height: "100%" }}
+                        />
+                      ) : (
+                        <RemoteUser
+                          user={remoteusers.find(
+                            (u) => u.uid === participant.id
+                          )}
+                          playVideo
+                          style={{ width: "100%", height: "100%" }}
+                        />
+                      )}
                     </div>
                   </div>
                 </AspectRatio>
@@ -110,11 +137,21 @@ export function ParticipantGrid({ layout = "grid" }: ParticipantGridProps) {
           <div className="h-full p-4">
             <div className="relative rounded-lg overflow-hidden bg-neutral-800 h-full">
               <AspectRatio ratio={16 / 9}>
-                <div className="absolute inset-0 bg-neutral-900 flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-32 h-32 rounded-full bg-primary flex items-center justify-center">
-                    <span className="text-4xl text-white">
-                      {pinned.name[0]}
-                    </span>
+                    {pinned.id === "local" ? (
+                      <LocalVideoTrack
+                        track={pinned.videoTrack}
+                        play
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    ) : (
+                      <RemoteUser
+                        user={remoteusers.find((u) => u.uid === pinned.id)}
+                        playVideo
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    )}
                   </div>
                 </div>
               </AspectRatio>
@@ -153,11 +190,23 @@ export function ParticipantGrid({ layout = "grid" }: ParticipantGridProps) {
                 className="relative rounded-lg overflow-hidden bg-neutral-800"
               >
                 <AspectRatio ratio={16 / 9}>
-                  <div className="absolute inset-0 bg-neutral-900 flex items-center justify-center">
+                  <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
-                      <span className="text-lg text-white">
-                        {participant.name[0]}
-                      </span>
+                      {participant.id === "local" ? (
+                        <LocalVideoTrack
+                          track={participant.videoTrack}
+                          play
+                          style={{ width: "100%", height: "100%" }}
+                        />
+                      ) : (
+                        <RemoteUser
+                          user={remoteusers.find(
+                            (u) => u.uid === participant.id
+                          )}
+                          playVideo
+                          style={{ width: "100%", height: "100%" }}
+                        />
+                      )}
                     </div>
                   </div>
                 </AspectRatio>

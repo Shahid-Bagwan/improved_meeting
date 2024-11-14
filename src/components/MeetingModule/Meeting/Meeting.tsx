@@ -5,6 +5,7 @@ import { LayoutSelector } from "./LayoutSelector";
 import { MeetHeader } from "./MeetHeader";
 import { ParticipantGrid } from "./ParticipantGrid";
 import { useJoin, usePublish } from "agora-rtc-react";
+import { useTrackStore } from "@/store/useTrackStore";
 
 const Meeting = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -15,17 +16,17 @@ const Meeting = () => {
     setCurrentLayout(layoutId);
     // Additional layout change logic will be implemented here
   };
-
-  // usePublish([tracks.microphone, tracks.camera]);
-  // useJoin(
-  //   {
-  //     appid: "bb1b240334ea4a29b6a6b535ab3c24d6",
-  //     channel: "main",
-  //     token:
-  //       "007eJxTYLC9sUZIf2PytPppHzXN1IOv5+369aFOu5BX/ERa6u7zZ1cpMCQlGSYZmRgYG5ukJpokGlkmmSWaJZkamyYmGScbmaSYsfwxSG8IZGTQVPjAwsgAgSA+C0NuYmYeAwMAZ1AfgA==",
-  //   },
-  //   joined
-  // );
+  const { localCameraTrack, localMicrophoneTrack, joined } = useTrackStore();
+  usePublish([localCameraTrack, localMicrophoneTrack]);
+  useJoin(
+    {
+      appid: "bb1b240334ea4a29b6a6b535ab3c24d6",
+      channel: "main",
+      token:
+        "007eJxTYMip+iTP0rzrfFbKu4MXZs/ac6RCZcGq+jM3DmU+tJzYOGGTAkNSkmGSkYmBsbFJaqJJopFlklmiWZKpsWliknGykUmKWetak/SGQEaGIssJzIwMEAjiszDkJmbmMTAAADipIhw=",
+    },
+    joined
+  );
   return (
     <main className="min-h-screen bg-black">
       <MeetHeader />
