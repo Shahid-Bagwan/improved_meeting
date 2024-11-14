@@ -11,11 +11,25 @@ const Meeting = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLayoutSelectorOpen, setIsLayoutSelectorOpen] = useState(false);
   const [currentLayout, setCurrentLayout] = useState("grid");
+  const [sidebarContent, setSidebarContent] = useState<"chat" | "people">(
+    "chat"
+  );
 
   const handleLayoutChange = (layoutId: string) => {
     setCurrentLayout(layoutId);
-    // Additional layout change logic will be implemented here
+    setIsLayoutSelectorOpen(false);
   };
+
+  const handleOpenPeople = () => {
+    setSidebarContent("people");
+    setIsSidebarOpen(true);
+  };
+
+  const handleOpenChat = () => {
+    setSidebarContent("chat");
+    setIsSidebarOpen(true);
+  };
+
   const { localCameraTrack, localMicrophoneTrack, joined } = useTrackStore();
   usePublish([localCameraTrack, localMicrophoneTrack]);
   useJoin(
@@ -33,8 +47,16 @@ const Meeting = () => {
       <div className="pt-16 pb-20  overflow-y-auto">
         <ParticipantGrid layout={currentLayout} />
       </div>
-      <Controls onOpenLayoutSelector={() => setIsLayoutSelectorOpen(true)} />
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <Controls
+        onOpenLayoutSelector={handleLayoutChange}
+        onOpenPeople={handleOpenPeople}
+        onOpenChat={handleOpenChat}
+      />
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        content={sidebarContent}
+      />
       <LayoutSelector
         isOpen={isLayoutSelectorOpen}
         onClose={() => setIsLayoutSelectorOpen(false)}

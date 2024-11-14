@@ -94,10 +94,10 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
           className={cn(
             "grid gap-4 h-full",
             participants.length <= 2
-              ? "grid-cols-2"
+              ? " grid-cols-1 sm:grid-cols-2"
               : participants.length <= 4
               ? "grid-cols-2"
-              : "grid-cols-3"
+              : " grid-cols-1 sm:grid-cols-3"
           )}
         >
           {participants.map((participant) => (
@@ -167,7 +167,7 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
   // Pinned view or other layouts
   console.log("pinned", pinned);
   return (
-    <div className="flex h-full">
+    <div className="flex flex-col sm:flex-row h-full">
       <div className="flex-1">
         {
           <div className="h-full p-4">
@@ -220,7 +220,7 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
       </div>
 
       {showSidebar && (
-        <div className="w-80 bg-neutral-900 p-4 space-y-4 overflow-y-auto">
+        <div className="w-full sm:w-80 bg-neutral-900 p-4 space-y-4 overflow-y-auto">
           {participants
             .filter((p) => !p.isPinned)
             .map((participant) => (
