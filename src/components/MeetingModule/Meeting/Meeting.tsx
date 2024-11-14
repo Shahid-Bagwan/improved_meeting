@@ -23,14 +23,14 @@ const Meeting = () => {
       appid: "bb1b240334ea4a29b6a6b535ab3c24d6",
       channel: "main",
       token:
-        "007eJxTYMip+iTP0rzrfFbKu4MXZs/ac6RCZcGq+jM3DmU+tJzYOGGTAkNSkmGSkYmBsbFJaqJJopFlklmiWZKpsWliknGykUmKWetak/SGQEaGIssJzIwMEAjiszDkJmbmMTAAADipIhw=",
+        "007eJxTYNgnXe8rcfUyR2j26TK9xz3bLT8/PPV8gxR7b8AGt1x2Pn8FhqQkwyQjEwNjY5PURJNEI8sks0SzJFNj08Qk42QjkxQzoe2m6Q2BjAzbLBWYGRkgEMRnYchNzMxjYAAAC7Md0g==",
     },
     joined
   );
   return (
     <main className="min-h-screen bg-black">
       <MeetHeader />
-      <div className="pt-16 pb-20 h-[calc(100vh-36px)] overflow-y-auto">
+      <div className="pt-16 pb-20  overflow-y-auto">
         <ParticipantGrid layout={currentLayout} />
       </div>
       <Controls onOpenLayoutSelector={() => setIsLayoutSelectorOpen(true)} />

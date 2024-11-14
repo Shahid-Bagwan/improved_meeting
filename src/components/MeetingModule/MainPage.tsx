@@ -2,8 +2,6 @@
 import AgoraRTC, {
   ICameraVideoTrack,
   IMicrophoneAudioTrack,
-  useJoin,
-  usePublish,
 } from "agora-rtc-react";
 import { useEffect, useState } from "react";
 import { useTrackStore } from "@/store/useTrackStore";

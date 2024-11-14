@@ -1,59 +1,86 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 import { Mic, MicOff, Pin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useRemoteUsers } from "agora-rtc-react";
-import { useTrackStore } from "@/store/useTrackStore"; // Import useTrackStore
-import { LocalVideoTrack, RemoteUser } from "agora-rtc-react"; // Import components
+import { LocalUser, useRemoteUsers } from "agora-rtc-react";
+import { useTrackStore } from "@/store/useTrackStore";
+import { LocalVideoTrack, RemoteUser } from "agora-rtc-react";
+
+interface Participant {
+  id: string | number;
+  name: string;
+  isMuted: boolean;
+  isPinned: boolean;
+  videoTrack: any;
+  audioTrack: any;
+}
 
 interface ParticipantGridProps {
   layout?: string;
 }
 
-export function ParticipantGrid({ layout = "grid" }: ParticipantGridProps) {
-  const [pinnedParticipant, setPinnedParticipant] = useState<
-    string | number | null
-  >(null);
-
+export function ParticipantGrid({ layout }: ParticipantGridProps) {
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [pinned, setPinned] = useState<Participant | null>(null);
   // Get local tracks
-  const { localCameraTrack, localMicrophoneTrack } = useTrackStore();
+  const {
+    localCameraTrack,
+    localMicrophoneTrack,
+    isVideoEnabled,
+    isAudioEnabled,
+  } = useTrackStore();
 
   // Get remote users
   const remoteusers = useRemoteUsers();
 
   // Create participants array
-  const participants = [
-    {
-      id: "local",
-      name: "You",
-      isMuted: !localMicrophoneTrack,
-      isPinned: false,
-      videoTrack: localCameraTrack,
-      audioTrack: localMicrophoneTrack,
-    },
-    ...remoteusers.map((user) => ({
-      id: user.uid,
-      name: `User ${user.uid}`,
-      isMuted: !user.audioTrack,
-      isPinned: false,
-      videoTrack: user.videoTrack,
-      audioTrack: user.audioTrack,
-    })),
-  ];
+  useEffect(() => {
+    setParticipants([
+      {
+        id: "local",
+        name: "You",
+        isMuted: !localMicrophoneTrack,
+        isPinned: false,
+        videoTrack: localCameraTrack,
+        audioTrack: localMicrophoneTrack,
+      },
+      ...remoteusers.map((user) => ({
+        id: user.uid,
+        name: `User ${user.uid}`,
+        isMuted: !user.audioTrack,
+        isPinned: false,
+        videoTrack: user.videoTrack,
+        audioTrack: user.audioTrack,
+      })),
+    ]);
+    setPinned(participants[0]);
+  }, [localCameraTrack, localMicrophoneTrack, remoteusers]);
 
+  // Handle pinning a participant
   const handlePin = (participantId: string | number) => {
-    setPinnedParticipant((prev) =>
-      prev === participantId ? null : participantId
+    setParticipants((prevParticipants) =>
+      prevParticipants.map((participant) => ({
+        ...participant,
+        isPinned: participant.id === participantId ? true : false,
+      }))
     );
+    const foundParticipant =
+      participants?.find((p) => p.id === participantId) ?? null;
+    setPinned(foundParticipant);
   };
 
-  const showSidebar = participants.length > 6;
-  const pinned = participants.find((p) => p.isPinned);
-
-  if (layout === "grid" && !pinned) {
+  useEffect(() => {
+    if (layout !== "grid") {
+      setShowSidebar(true);
+    } else {
+      setShowSidebar(false);
+    }
+  }, [layout]);
+  if (layout === "grid") {
     return (
       <div className="w-full h-full p-4">
         <div
@@ -72,21 +99,25 @@ export function ParticipantGrid({ layout = "grid" }: ParticipantGridProps) {
                 <AspectRatio ratio={16 / 9}>
                   <div className="absolute inset-0  flex items-center justify-center">
                     {participant.id === "local" ? (
-                      <LocalVideoTrack
-                        track={participant.videoTrack}
-                        play
-                        style={{ width: "100%", height: "100%" }}
+                      <LocalUser
+                        videoTrack={participant.videoTrack}
+                        audioTrack={participant.audioTrack}
+                        cameraOn={!isVideoEnabled}
+                        micOn={!isAudioEnabled}
+                        playAudio={false}
+                        cover={`https://ui-avatars.com/api/?name=${participant.id}`}
                       />
                     ) : (
                       <RemoteUser
                         user={remoteusers.find((u) => u.uid === participant.id)}
                         playVideo
                         style={{ width: "100%", height: "100%" }}
+                        cover={`https://ui-avatars.com/api/?name=${participant.id}`}
                       />
                     )}
                   </div>
                 </AspectRatio>
-                <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
+                <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent z-40">
                   <div className="flex items-center justify-between">
                     <span className="text-white text-sm">
                       {participant.name}
@@ -124,42 +155,47 @@ export function ParticipantGrid({ layout = "grid" }: ParticipantGridProps) {
   }
 
   // Pinned view or other layouts
+  console.log("pinned", pinned);
   return (
     <div className="flex h-full">
       <div className="flex-1">
-        {pinned && (
+        {
           <div className="h-full p-4">
             <div className="relative rounded-lg overflow-hidden bg-neutral-800 h-full">
               <AspectRatio ratio={16 / 9}>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  {pinned.id === "local" ? (
-                    <LocalVideoTrack
-                      track={pinned.videoTrack}
-                      play
-                      style={{ width: "100%", height: "100%" }}
+                  {pinned?.id === "local" ? (
+                    <LocalUser
+                      videoTrack={pinned?.videoTrack}
+                      audioTrack={pinned?.audioTrack}
+                      cameraOn={!isVideoEnabled}
+                      micOn={!isAudioEnabled}
+                      playAudio={false}
+                      cover={`https://ui-avatars.com/api/?name=${pinned?.id}`}
                     />
                   ) : (
                     <RemoteUser
-                      user={remoteusers.find((u) => u.uid === pinned.id)}
+                      user={remoteusers.find((u) => u.uid === pinned?.id)}
                       playVideo
                       style={{ width: "100%", height: "100%" }}
+                      cover={`https://ui-avatars.com/api/?name=${pinned?.id}`}
                     />
                   )}
                 </div>
               </AspectRatio>
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent z-40">
                 <div className="flex items-center justify-between">
-                  <span className="text-white">{pinned.name}</span>
+                  <span className="text-white">{pinned?.name}</span>
                   <div className="flex items-center gap-3">
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-10 w-10 rounded-full hover:bg-white/20"
-                      onClick={() => handlePin(pinned.id)}
+                      className="h-10 w-10 rounded-full hover:bg-white/20 cursor-pointer z-30"
+                      onClick={() => handlePin(pinned?.id as string)}
                     >
-                      <Pin className="h-5 w-5 text-blue-400" />
+                      <Pin className="h-5 w-5 text-blue-400 " />
                     </Button>
-                    {pinned.isMuted ? (
+                    {pinned?.isMuted ? (
                       <MicOff className="h-5 w-5 text-red-500" />
                     ) : (
                       <Mic className="h-5 w-5 text-white" />
@@ -169,7 +205,7 @@ export function ParticipantGrid({ layout = "grid" }: ParticipantGridProps) {
               </div>
             </div>
           </div>
-        )}
+        }
       </div>
 
       {showSidebar && (
@@ -184,21 +220,25 @@ export function ParticipantGrid({ layout = "grid" }: ParticipantGridProps) {
                 <AspectRatio ratio={16 / 9}>
                   <div className="absolute inset-0 flex items-center justify-center">
                     {participant.id === "local" ? (
-                      <LocalVideoTrack
-                        track={participant.videoTrack}
-                        play
-                        style={{ width: "100%", height: "100%" }}
+                      <LocalUser
+                        videoTrack={participant.videoTrack}
+                        audioTrack={participant.audioTrack}
+                        cameraOn={!isVideoEnabled}
+                        micOn={!isAudioEnabled}
+                        playAudio={false}
+                        cover={`https://ui-avatars.com/api/?name=${participant.id}`}
                       />
                     ) : (
                       <RemoteUser
                         user={remoteusers.find((u) => u.uid === participant.id)}
                         playVideo
                         style={{ width: "100%", height: "100%" }}
+                        cover={`https://ui-avatars.com/api/?name=${participant.id}`}
                       />
                     )}
                   </div>
                 </AspectRatio>
-                <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
+                <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent z-40">
                   <div className="flex items-center justify-between">
                     <span className="text-white text-sm">
                       {participant.name}
@@ -207,7 +247,7 @@ export function ParticipantGrid({ layout = "grid" }: ParticipantGridProps) {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-6 w-6 rounded-full hover:bg-white/20"
+                        className="h-6 w-6 rounded-full hover:bg-white/20 cursor-pointer z-30"
                         onClick={() => handlePin(participant.id)}
                       >
                         <Pin className="h-3 w-3 text-white/70" />
