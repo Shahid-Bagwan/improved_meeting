@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
-import { Mic, MicOff, Pin, ChevronLeft, ChevronRight } from "lucide-react";
+import { Mic, MicOff, Pin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRemoteUsers } from "agora-rtc-react";
 import { useTrackStore } from "@/store/useTrackStore"; // Import useTrackStore
@@ -14,14 +14,12 @@ interface ParticipantGridProps {
 }
 
 export function ParticipantGrid({ layout = "grid" }: ParticipantGridProps) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
   const [pinnedParticipant, setPinnedParticipant] = useState<
     string | number | null
   >(null);
 
   // Get local tracks
-  const { localCameraTrack, localMicrophoneTrack, joined } = useTrackStore();
+  const { localCameraTrack, localMicrophoneTrack } = useTrackStore();
 
   // Get remote users
   const remoteusers = useRemoteUsers();
@@ -73,23 +71,19 @@ export function ParticipantGrid({ layout = "grid" }: ParticipantGridProps) {
               <div className="relative rounded-lg overflow-hidden bg-neutral-800 h-full">
                 <AspectRatio ratio={16 / 9}>
                   <div className="absolute inset-0  flex items-center justify-center">
-                    <div className="w-20 h-20 rounded-full  flex items-center justify-center">
-                      {participant.id === "local" ? (
-                        <LocalVideoTrack
-                          track={participant.videoTrack}
-                          play
-                          style={{ width: "100%", height: "100%" }}
-                        />
-                      ) : (
-                        <RemoteUser
-                          user={remoteusers.find(
-                            (u) => u.uid === participant.id
-                          )}
-                          playVideo
-                          style={{ width: "100%", height: "100%" }}
-                        />
-                      )}
-                    </div>
+                    {participant.id === "local" ? (
+                      <LocalVideoTrack
+                        track={participant.videoTrack}
+                        play
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    ) : (
+                      <RemoteUser
+                        user={remoteusers.find((u) => u.uid === participant.id)}
+                        playVideo
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    )}
                   </div>
                 </AspectRatio>
                 <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
@@ -138,21 +132,19 @@ export function ParticipantGrid({ layout = "grid" }: ParticipantGridProps) {
             <div className="relative rounded-lg overflow-hidden bg-neutral-800 h-full">
               <AspectRatio ratio={16 / 9}>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-32 h-32 rounded-full bg-primary flex items-center justify-center">
-                    {pinned.id === "local" ? (
-                      <LocalVideoTrack
-                        track={pinned.videoTrack}
-                        play
-                        style={{ width: "100%", height: "100%" }}
-                      />
-                    ) : (
-                      <RemoteUser
-                        user={remoteusers.find((u) => u.uid === pinned.id)}
-                        playVideo
-                        style={{ width: "100%", height: "100%" }}
-                      />
-                    )}
-                  </div>
+                  {pinned.id === "local" ? (
+                    <LocalVideoTrack
+                      track={pinned.videoTrack}
+                      play
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                  ) : (
+                    <RemoteUser
+                      user={remoteusers.find((u) => u.uid === pinned.id)}
+                      playVideo
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                  )}
                 </div>
               </AspectRatio>
               <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
@@ -191,23 +183,19 @@ export function ParticipantGrid({ layout = "grid" }: ParticipantGridProps) {
               >
                 <AspectRatio ratio={16 / 9}>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
-                      {participant.id === "local" ? (
-                        <LocalVideoTrack
-                          track={participant.videoTrack}
-                          play
-                          style={{ width: "100%", height: "100%" }}
-                        />
-                      ) : (
-                        <RemoteUser
-                          user={remoteusers.find(
-                            (u) => u.uid === participant.id
-                          )}
-                          playVideo
-                          style={{ width: "100%", height: "100%" }}
-                        />
-                      )}
-                    </div>
+                    {participant.id === "local" ? (
+                      <LocalVideoTrack
+                        track={participant.videoTrack}
+                        play
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    ) : (
+                      <RemoteUser
+                        user={remoteusers.find((u) => u.uid === participant.id)}
+                        playVideo
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    )}
                   </div>
                 </AspectRatio>
                 <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
