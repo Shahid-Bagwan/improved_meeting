@@ -84,22 +84,42 @@ export function Controls({
 
       {/* Center - Main Controls */}
       <div className="flex items-center gap-4 mx-auto sm:mx-0">
-        <Button
+        <div className="relative">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="w-12 h-12 rounded-full text-white hover:bg-white"
+            onClick={handleToggleMute}
+          >
+            <Mic
+              className={isAudioEnabled ? "text-red-500" : "text-blue-500"}
+            />
+          </Button>
+          {/* {microphoneError && <ErrorPopover error={microphoneError} />} */}
+        </div>
+        <div className="relative">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="w-12 h-12 rounded-full text-white hover:bg-white"
+            onClick={handleToggleVideo}
+          >
+            <Video
+              className={isVideoEnabled ? "text-red-500" : "text-blue-500"}
+            />
+          </Button>
+          {/* {cameraError && <ErrorPopover error={cameraError} />} */}
+        </div>
+        {/* <Button
           variant="ghost"
           size="icon"
           className="w-12 h-12 rounded-full text-white hover:bg-white"
-          onClick={handleToggleMute}
+          onClick={handleToggleScreenSharing}
         >
-          <Mic className={isAudioEnabled ? "text-red-500" : "text-white"} />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="w-12 h-12 rounded-full text-white hover:bg-white"
-          onClick={handleToggleVideo}
-        >
-          <Video className={isVideoEnabled ? "text-red-500" : "text-white"} />
-        </Button>
+          <Monitor
+            className={isScreenSharing ? "text-red-500" : "text-blue-500"}
+          />
+        </Button> */}
 
         {/* More options dropdown - Layout option only shows on mobile */}
         <DropdownMenu>
@@ -164,6 +184,7 @@ export function Controls({
           variant="destructive"
           size="icon"
           className="w-12 h-12 rounded-full bg-red-500 hover:bg-red-600"
+          // onClick={leaveChannel}
         >
           <PhoneOff className="h-5 w-5" />
         </Button>

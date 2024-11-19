@@ -88,6 +88,7 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
     }
   }, [layout]);
   if (layout === "grid") {
+    console.log("grid", participants);
     return (
       <div className="w-full h-full p-4">
         <div
@@ -111,10 +112,10 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
                         audioTrack={
                           participant.audioTrack as IMicrophoneAudioTrack
                         }
-                        cameraOn={!isVideoEnabled}
-                        micOn={!isAudioEnabled}
+                        cameraOn={isVideoEnabled}
+                        micOn={isAudioEnabled}
                         playAudio={false}
-                        cover={`https://ui-avatars.com/api/?name=${participant.id}`}
+                        cover={`https://ui-avatars.com/api/?name=${participant.name}`}
                       />
                     ) : (
                       <RemoteUser
@@ -149,9 +150,9 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
                         />
                       </Button>
                       {participant.isMuted ? (
-                        <MicOff className="h-4 w-4 text-red-500" />
+                        <MicOff className="h-4 w-4  text-red-500" />
                       ) : (
-                        <Mic className="h-4 w-4 text-white" />
+                        <Mic className="h-4 w-4 text-blue-500" />
                       )}
                     </div>
                   </div>
@@ -178,10 +179,10 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
                     <LocalUser
                       videoTrack={pinned?.videoTrack as ICameraVideoTrack}
                       audioTrack={pinned?.audioTrack as IMicrophoneAudioTrack}
-                      cameraOn={!isVideoEnabled}
-                      micOn={!isAudioEnabled}
+                      cameraOn={isVideoEnabled}
+                      micOn={isAudioEnabled}
                       playAudio={false}
-                      cover={`https://ui-avatars.com/api/?name=${pinned?.id}`}
+                      cover={`https://ui-avatars.com/api/?name=${pinned?.name}`}
                     />
                   ) : (
                     <RemoteUser
@@ -207,9 +208,9 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
                       <Pin className="h-5 w-5 text-blue-400 " />
                     </Button>
                     {pinned?.isMuted ? (
-                      <MicOff className="h-5 w-5 text-red-500" />
+                      <MicOff className="h-4 w-4  text-red-500" />
                     ) : (
-                      <Mic className="h-5 w-5 text-white" />
+                      <Mic className="h-4 w-4 text-blue-500" />
                     )}
                   </div>
                 </div>
@@ -236,10 +237,10 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
                         audioTrack={
                           participant.audioTrack as IMicrophoneAudioTrack
                         }
-                        cameraOn={!isVideoEnabled}
-                        micOn={!isAudioEnabled}
+                        cameraOn={isVideoEnabled}
+                        micOn={isAudioEnabled}
                         playAudio={false}
-                        cover={`https://ui-avatars.com/api/?name=${participant.id}`}
+                        cover={`https://ui-avatars.com/api/?name=${participant.name}`}
                       />
                     ) : (
                       <RemoteUser
@@ -267,9 +268,9 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
                         <Pin className="h-3 w-3 text-white/70" />
                       </Button>
                       {participant.isMuted ? (
-                        <MicOff className="h-3 w-3 text-red-500" />
+                        <MicOff className="h-4 w-4  text-red-500" />
                       ) : (
-                        <Mic className="h-3 w-3 text-white" />
+                        <Mic className="h-4 w-4 text-blue-500" />
                       )}
                     </div>
                   </div>
