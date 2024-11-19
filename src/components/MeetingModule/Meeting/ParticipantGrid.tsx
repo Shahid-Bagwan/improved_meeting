@@ -12,6 +12,8 @@ import {
   IRemoteVideoTrack,
   LocalUser,
   useRemoteUsers,
+  useRemoteVideoTracks,
+  useRemoteAudioTracks,
 } from "agora-rtc-react";
 import { useTrackStore } from "@/store/useTrackStore";
 import { RemoteUser } from "agora-rtc-react";
@@ -41,8 +43,16 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
     isAudioEnabled,
   } = useTrackStore();
 
-  // Get remote users
-  const remoteusers = useRemoteUsers();
+  // Get remote users and their tracks
+  const remoteUsers = useRemoteUsers();
+  const filteredRemoteUsers = remoteUsers;
+  const { videoTracks } = useRemoteVideoTracks(filteredRemoteUsers);
+  const { audioTracks } = useRemoteAudioTracks(filteredRemoteUsers);
+
+  // Auto-play audio tracks
+  useEffect(() => {
+    audioTracks.map((track) => track.play());
+  }, [audioTracks]);
 
   // Create participants array
   useEffect(() => {
@@ -55,17 +65,23 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
         videoTrack: localCameraTrack,
         audioTrack: localMicrophoneTrack,
       },
-      ...remoteusers.map((user) => ({
+      ...filteredRemoteUsers.map((user, index) => ({
         id: user.uid,
         name: `User ${user.uid}`,
-        isMuted: !user.audioTrack,
+        isMuted: !audioTracks[index],
         isPinned: false,
-        videoTrack: user.videoTrack,
-        audioTrack: user.audioTrack,
+        videoTrack: videoTracks[index],
+        audioTrack: audioTracks[index],
       })),
     ]);
     setPinned(participants[0]);
-  }, [localCameraTrack, localMicrophoneTrack, remoteusers]);
+  }, [
+    localCameraTrack,
+    localMicrophoneTrack,
+    filteredRemoteUsers,
+    videoTracks,
+    audioTracks,
+  ]);
 
   // Handle pinning a participant
   const handlePin = (participantId: string | number) => {
@@ -119,7 +135,7 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
                       />
                     ) : (
                       <RemoteUser
-                        user={remoteusers.find((u) => u.uid === participant.id)}
+                        user={remoteUsers.find((u) => u.uid === participant.id)}
                         playVideo={!!participant.videoTrack}
                         playAudio={!!participant.audioTrack}
                         style={{ width: "100%", height: "100%" }}
@@ -186,7 +202,7 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
                     />
                   ) : (
                     <RemoteUser
-                      user={remoteusers.find((u) => u.uid === pinned?.id)}
+                      user={remoteUsers.find((u) => u.uid === pinned?.id)}
                       playVideo={!!pinned?.videoTrack}
                       playAudio={!!pinned?.audioTrack}
                       style={{ width: "100%", height: "100%" }}
@@ -244,7 +260,7 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
                       />
                     ) : (
                       <RemoteUser
-                        user={remoteusers.find((u) => u.uid === participant.id)}
+                        user={remoteUsers.find((u) => u.uid === participant.id)}
                         playVideo={!!participant.videoTrack}
                         playAudio={!!participant.audioTrack}
                         style={{ width: "100%", height: "100%" }}
