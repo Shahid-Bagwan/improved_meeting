@@ -17,13 +17,13 @@ export function VideoPreview({ onOpenEffects }: VideoPreviewProps) {
   console.log("tosds");
   const handleToggleVideo = () => {
     console.log("toggle video");
-    void localCameraTrack?.setEnabled(!isVideoEnabled);
+    // void localCameraTrack?.close();
     useTrackStore.getState().toggleVideo();
     // onToggleVideo();
   };
 
   const handleToggleMute = () => {
-    void localMicrophoneTrack?.setEnabled(!isAudioEnabled);
+    // void localMicrophoneTrack?.close();
     useTrackStore.getState().toggleAudio();
     // onToggleMute();
   };

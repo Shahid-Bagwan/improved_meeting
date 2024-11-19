@@ -10,7 +10,13 @@ import React from "react";
 import Meeting from "./Meeting/Meeting";
 
 const MainPage = () => {
-  const { joined } = useTrackStore();
+  const {
+    joined,
+    isAudioEnabled,
+    isVideoEnabled,
+    localCameraTrack,
+    localMicrophoneTrack,
+  } = useTrackStore();
   const setTracks = useTrackStore((state) => state.setTracks);
   const setLoading = useTrackStore((state) => state.setLoading);
   const selectedDeviceIds = useTrackStore((state) => state.selectedDeviceIds);
@@ -52,6 +58,12 @@ const MainPage = () => {
     };
 
     const initializeTracks = async () => {
+      if (localCameraTrack) {
+        localCameraTrack.close();
+      }
+      if (localMicrophoneTrack) {
+        localMicrophoneTrack.close();
+      }
       const cameraTrack = await createCameraTrack();
       const microphoneTrack = await createMicrophoneTrack();
       if (cameraTrack && microphoneTrack) {
@@ -71,7 +83,7 @@ const MainPage = () => {
       tracks.camera?.close();
       tracks.microphone?.close();
     };
-  }, [selectedDeviceIds]);
+  }, [selectedDeviceIds, isVideoEnabled, isAudioEnabled]);
 
   return <>{!joined ? <PreMeeting /> : <Meeting />}</>;
 };
