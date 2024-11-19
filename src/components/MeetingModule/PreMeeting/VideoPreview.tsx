@@ -33,8 +33,8 @@ export function VideoPreview({ onOpenEffects }: VideoPreviewProps) {
       <LocalUser
         videoTrack={localCameraTrack}
         audioTrack={localMicrophoneTrack}
-        cameraOn={!isVideoEnabled}
-        micOn={!isAudioEnabled}
+        cameraOn={isVideoEnabled}
+        micOn={isAudioEnabled}
         cover="https://gear5world.com/cdn/shop/articles/zoro_one_piece_onigashima.jpg?v=1699742560&width=1100"
       />
       {isVideoEnabled && (
