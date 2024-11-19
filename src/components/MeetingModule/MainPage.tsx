@@ -12,6 +12,7 @@ import Meeting from "./Meeting/Meeting";
 const MainPage = () => {
   const { joined } = useTrackStore();
   const setTracks = useTrackStore((state) => state.setTracks);
+  const setLoading = useTrackStore((state) => state.setLoading);
   const selectedDeviceIds = useTrackStore((state) => state.selectedDeviceIds);
   const [tracks, setLocalTracks] = useState<{
     camera: ICameraVideoTrack | null;
@@ -19,22 +20,44 @@ const MainPage = () => {
   }>({ camera: null, microphone: null });
 
   useEffect(() => {
-    const initializeTracks = () => {
-      // Initialize camera with selected device
-      AgoraRTC.createCameraVideoTrack({
-        encoderConfig: "1080p",
-        ...(selectedDeviceIds.cameraId !== "default" && {
-          cameraId: selectedDeviceIds.cameraId,
-        }),
-      }).then((cameraTrack) => {
-        // Initialize microphone with selected device
-        AgoraRTC.createMicrophoneAudioTrack({
-          microphoneId: selectedDeviceIds.microphoneId,
-        }).then((microphoneTrack) => {
-          setLocalTracks({ camera: cameraTrack, microphone: microphoneTrack });
-          setTracks(cameraTrack, microphoneTrack);
+    setLoading(false);
+    const setCameraError = useTrackStore.getState().setCameraError;
+    const setMicrophoneError = useTrackStore.getState().setMicrophoneError;
+
+    const createCameraTrack = async () => {
+      try {
+        const cameraTrack = await AgoraRTC.createCameraVideoTrack({
+          encoderConfig: "1080p",
+          ...(selectedDeviceIds.cameraId !== "default" && {
+            cameraId: selectedDeviceIds.cameraId,
+          }),
         });
-      });
+        return cameraTrack;
+      } catch (error) {
+        setCameraError(error.message);
+        return null;
+      }
+    };
+
+    const createMicrophoneTrack = async () => {
+      try {
+        const microphoneTrack = await AgoraRTC.createMicrophoneAudioTrack({
+          microphoneId: selectedDeviceIds.microphoneId,
+        });
+        return microphoneTrack;
+      } catch (error) {
+        setMicrophoneError(error.message);
+        return null;
+      }
+    };
+
+    const initializeTracks = async () => {
+      const cameraTrack = await createCameraTrack();
+      const microphoneTrack = await createMicrophoneTrack();
+      if (cameraTrack && microphoneTrack) {
+        setLocalTracks({ camera: cameraTrack, microphone: microphoneTrack });
+        setTracks(cameraTrack, microphoneTrack);
+      }
     };
 
     // Wait for window to fully load

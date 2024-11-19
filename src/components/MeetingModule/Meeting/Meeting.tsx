@@ -37,7 +37,7 @@ const Meeting = () => {
       appid: "bb1b240334ea4a29b6a6b535ab3c24d6",
       channel: "main",
       token:
-        "007eJxTYNgnXe8rcfUyR2j26TK9xz3bLT8/PPV8gxR7b8AGt1x2Pn8FhqQkwyQjEwNjY5PURJNEI8sks0SzJFNj08Qk42QjkxQzoe2m6Q2BjAzbLBWYGRkgEMRnYchNzMxjYAAAC7Md0g==",
+        "007eJxTYLB8+HHPRsc5iREsf89Olis83TclfX7ofs73F96bmGvdenhRgSEpyTDJyMTA2NgkNdEk0cgyySzRLMnU2DQxyTjZyCTFrMrRJr0hkJHBInExEyMDBIL4LAy5iZl5DAwA7a8g3w==",
     },
     joined
   );

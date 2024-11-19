@@ -12,6 +12,12 @@ interface TrackStore {
     speakerId: string;
     cameraId: string;
   };
+  token: string | null;
+  channelName: string | null;
+  fullName: string | null;
+  loading: boolean;
+  cameraError: string | null;
+  microphoneError: string | null;
   setTracks: (
     video?: ICameraVideoTrack | null,
     audio?: IMicrophoneAudioTrack | null
@@ -23,6 +29,12 @@ interface TrackStore {
     deviceType: "microphoneId" | "speakerId" | "cameraId",
     deviceId: string
   ) => void;
+  setToken: (token: string) => void;
+  setChannelName: (name: string) => void;
+  setFullName: (name: string) => void;
+  setLoading: (loading: boolean) => void;
+  setCameraError: (error: string | null) => void;
+  setMicrophoneError: (error: string | null) => void;
 }
 
 export const useTrackStore = create<TrackStore>((set) => ({
@@ -36,6 +48,12 @@ export const useTrackStore = create<TrackStore>((set) => ({
     speakerId: "default",
     cameraId: "default",
   },
+  token: null,
+  channelName: null,
+  fullName: null,
+  loading: false,
+  cameraError: null,
+  microphoneError: null,
   setTracks: (video, audio) =>
     set((state) => ({
       localCameraTrack: video ?? state.localCameraTrack,
@@ -53,4 +71,10 @@ export const useTrackStore = create<TrackStore>((set) => ({
         [deviceType]: deviceId,
       },
     })),
+  setToken: (token) => set({ token }),
+  setChannelName: (channelName) => set({ channelName }),
+  setFullName: (fullName) => set({ fullName }),
+  setLoading: (loading) => set({ loading }),
+  setCameraError: (error) => set({ cameraError: error }),
+  setMicrophoneError: (error) => set({ microphoneError: error }),
 }));

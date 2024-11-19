@@ -2,16 +2,16 @@ import Image from "next/image";
 
 export function Header() {
   return (
-    <header className="flex items-center p-4 border-b">
+    <header className="flex items-center  border-b">
       <div className="flex items-center gap-2">
         <Image
-          src="/placeholder.svg"
+          src="/spread-main-logo.png"
           alt="Google Meet"
-          width={40}
-          height={40}
-          className="w-10 h-10"
+          width={400}
+          height={400}
+          quality={100}
+          className="w-52 h-14"
         />
-        <span className="text-xl font-medium">Google Meet</span>
       </div>
     </header>
   );

@@ -51,21 +51,25 @@ export function SettingsControls() {
   };
 
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center ">
       <div className="grid gap-2 overflow-hidden">
         <Select
           defaultValue="default"
           onValueChange={(value) => handleDeviceChange("microphoneId", value)}
         >
-          <SelectTrigger className="w-[300px]">
-            <div className="flex items-center gap-2">
-              <Mic className="w-4 h-4" />
-              <SelectValue placeholder="Microphone" />
+          <SelectTrigger className="w-full sm:w-[200px] rounded-full">
+            <div className="flex items-center gap-2 truncate">
+              <Mic className="w-4 h-4 flex-shrink-0" />
+              <SelectValue placeholder="Microphone" className="truncate" />
             </div>
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             {devices?.microphones?.map((device) => (
-              <SelectItem key={device.deviceId} value={device.deviceId}>
+              <SelectItem
+                key={device.deviceId}
+                value={device.deviceId}
+                className="truncate"
+              >
                 {device.label || "Unnamed Microphone"}
               </SelectItem>
             ))}
@@ -78,18 +82,18 @@ export function SettingsControls() {
           defaultValue="default"
           onValueChange={(value) => handleDeviceChange("speakerId", value)}
         >
-          <SelectTrigger className="w-[300px]">
-            <div className="flex items-center gap-2">
-              <MonitorSpeaker className="w-4 h-4" />
-              <SelectValue placeholder="Speakers" />
+          <SelectTrigger className="w-full sm:w-[200px] rounded-full">
+            <div className="flex items-center gap-2 truncate">
+              <MonitorSpeaker className="w-4 h-4 flex-shrink-0" />
+              <SelectValue placeholder="Speakers" className="truncate" />
             </div>
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             {devices?.speakers?.map((device) => (
               <SelectItem
                 key={device.deviceId}
                 value={device.deviceId}
-                className="truncate break-words"
+                className="truncate"
               >
                 {device.label || "Unnamed Speaker"}
               </SelectItem>
@@ -103,10 +107,10 @@ export function SettingsControls() {
           defaultValue="default"
           onValueChange={(value) => handleDeviceChange("cameraId", value)}
         >
-          <SelectTrigger className="w-[300px]">
-            <div className="flex items-center gap-2">
-              <Camera className="w-4 h-4" />
-              <SelectValue placeholder="Camera" />
+          <SelectTrigger className="w-full sm:w-[200px]rounded-full">
+            <div className="flex items-center gap-2 truncate">
+              <Camera className="w-4 h-4 flex-shrink-0" />
+              <SelectValue placeholder="Camera" className="truncate" />
             </div>
           </SelectTrigger>
           <SelectContent>
@@ -114,7 +118,7 @@ export function SettingsControls() {
               <SelectItem
                 key={device.deviceId}
                 value={device.deviceId}
-                className="truncate break-words"
+                className="truncate"
               >
                 {device.label || "Unnamed Camera"}
               </SelectItem>
