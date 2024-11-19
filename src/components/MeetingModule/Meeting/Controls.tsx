@@ -17,8 +17,11 @@ import {
   Maximize2,
   Users,
   MessageSquare,
+  Monitor,
 } from "lucide-react";
 import { Clock } from "./Clock";
+import { useEffect, useRef, useState } from "react";
+import AgoraRTC from "agora-rtc-react";
 
 interface ControlsProps {
   onOpenLayoutSelector: (layout: string) => void;
@@ -37,7 +40,13 @@ export function Controls({
     isAudioEnabled,
     isVideoEnabled,
   } = useTrackStore();
-
+  const [isScreenSharing, setIsScreenSharing] = useState(false);
+  const [screenTrack, setScreenTrack] = useState<null | any>(null);
+  const screenShareClient = useRef(
+    AgoraRTC.createClient({ codec: "vp8", mode: "rtc" })
+  );
+  // const screnSharingName = fullName + " ScreenShare";
+  const screnSharingName = "testing ScreenShare";
   const handleToggleVideo = () => {
     console.log("toggle video");
     void localCameraTrack?.setEnabled(!isVideoEnabled);
@@ -50,6 +59,51 @@ export function Controls({
     useTrackStore.getState().toggleAudio();
     // onToggleMute();
   };
+
+  // Function to handle toggling screen sharing
+  const handleToggleScreenSharing = async () => {
+    if (!isScreenSharing) {
+      try {
+        // Create and publish the screen track with the screenShareClient
+        const screenTrack = await AgoraRTC.createScreenVideoTrack({
+          encoderConfig: "1080p",
+        });
+        await screenShareClient.current.join(
+          "bb1b240334ea4a29b6a6b535ab3c24d6",
+          "main",
+          "007eJxTYPivvVxvUmfgolBmx2fexTpbT8ZYixTxtv8xuz31aVFxsKQCQ1KSYZKRiYGxsUlqokmikWWSWaJZkqmxaWKScbKRSYrZ1oc26Q2BjAxeE8IYGRkgEMRnYchNzMxjYAAA9g0eTQ==",
+          screnSharingName
+        );
+        await screenShareClient.current.publish(screenTrack);
+        setScreenTrack(screenTrack);
+        setIsScreenSharing(true);
+      } catch (error) {
+        console.error("Error starting screen sharing:", error);
+      }
+    } else {
+      try {
+        // Stop the screen track and leave the screenShareClient
+        if (screenTrack) {
+          await screenShareClient.current.unpublish(screenTrack);
+          screenTrack.close();
+          setScreenTrack(null);
+        }
+        await screenShareClient.current.leave();
+        setIsScreenSharing(false);
+      } catch (error) {
+        console.error("Error stopping screen sharing:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (screenTrack) {
+        screenTrack.close();
+        screenShareClient.current.leave();
+      }
+    };
+  }, []);
 
   return (
     <div className="fixed bottom-0 left-0 right-0 h-20 bg-black/90 flex items-center justify-between px-4 z-40">
@@ -110,7 +164,7 @@ export function Controls({
           </Button>
           {/* {cameraError && <ErrorPopover error={cameraError} />} */}
         </div>
-        {/* <Button
+        <Button
           variant="ghost"
           size="icon"
           className="w-12 h-12 rounded-full text-white hover:bg-white"
@@ -119,7 +173,7 @@ export function Controls({
           <Monitor
             className={isScreenSharing ? "text-red-500" : "text-blue-500"}
           />
-        </Button> */}
+        </Button>
 
         {/* More options dropdown - Layout option only shows on mobile */}
         <DropdownMenu>

@@ -49,6 +49,7 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
   const { videoTracks } = useRemoteVideoTracks(filteredRemoteUsers);
   const { audioTracks } = useRemoteAudioTracks(filteredRemoteUsers);
 
+  console.log(videoTracks, "videoTracks");
   // Auto-play audio tracks
   useEffect(() => {
     audioTracks.map((track) => track.play());
@@ -74,7 +75,7 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
         audioTrack: audioTracks[index],
       })),
     ]);
-    setPinned(participants[0]);
+    // setPinned(participants[0]);
   }, [
     localCameraTrack,
     localMicrophoneTrack,
@@ -103,6 +104,7 @@ export function ParticipantGrid({ layout }: ParticipantGridProps) {
       setShowSidebar(false);
     }
   }, [layout]);
+
   if (layout === "grid") {
     console.log("grid", participants);
     return (
